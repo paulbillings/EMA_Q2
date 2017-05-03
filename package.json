@@ -1,0 +1,8 @@
+{
+    "name": "EMA_Q2",
+    "version": "1.0.0",
+    "keywords": ["util", "functional", "server", "client", "browser"],
+    "author": "Paul Billings",
+    "contributors": [],
+    "dependencies": {}
+}
