@@ -55,10 +55,16 @@ var app = {
                   if (obj.status == "error") {
                       alert(obj.data[0].reason);
                   } else {
-						alert(obj.data[widgetNumber].description);
+						//alert(obj.data[widgetNumber].description);
 						var image = document.getElementById("widget_image");
 						image.style.display = "block";
-						image.src = obj.data[widgetNumber].url;	
+						image.src = obj.data[widgetNumber].url;
+						
+						var disc = obj.data[widgetNumber].description;
+						document.getElementById('description').innerHTML = disc;
+						
+						var price = obj.data[widgetNumber].pence_price;
+						document.getElementById('price').innerHTML = price;
 					}
 			  });
 	  };
@@ -78,10 +84,16 @@ var app = {
                   if (obj.status == "error") {
                       alert(obj.data[0].reason);
                   } else {
-						alert(obj.data[widgetNumber].description);
+						//alert(obj.data[widgetNumber].description);
 						var image = document.getElementById("widget_image");
 						image.style.display = "block";
-						image.src = obj.data[widgetNumber].url;	
+						image.src = obj.data[widgetNumber].url;
+						
+						var disc = obj.data[widgetNumber].description;
+						document.getElementById('description').innerHTML = disc;
+						
+						var price = obj.data[widgetNumber].pence_price;
+						document.getElementById('price').innerHTML = price;
 					}
 			  });
 	  };
