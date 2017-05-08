@@ -37,15 +37,56 @@ var app = {
         this.bindEvents();
     },
     bindEvents: function() {
-      var address;
+      var widgetNumber = -1;
       function megaMaxSale() {
 		// code to go here
        
 	    this.previousWidget = function () {
-	    alert("In previous widget");
+			widgetNumber--;
+			if (widgetNumber < 0) {
+				alert('Reached beginning of list');
+				widgetNumber = 0;
+			}
+	    
+            /* Invoke the RESTful API to get widget details*/
+			$.get('http://137.108.93.222/openstack/api/widgets?OUCU=pb8255&password=CKJ8SgSY',
+              function (data) {
+                  var obj = $.parseJSON(data);
+                  if (obj.status == "error") {
+                      alert(obj.data[0].reason);
+                  } else {
+						alert(obj.data[widgetNumber].description);
+						var image = document.getElementById("widget_image");
+						image.style.display = "block";
+						image.src = obj.data[widgetNumber].url;	
+					}
+			  });
 	  };
 	   
 
+	   this.nextWidget = function () {
+			widgetNumber++;
+			if (widgetNumber > 9) {
+				alert('Reached end of list');
+				widgetNumber = 9;
+			}
+	    
+            /* Invoke the RESTful API to get widget details*/
+			$.get('http://137.108.93.222/openstack/api/widgets?OUCU=pb8255&password=CKJ8SgSY',
+              function (data) {
+                  var obj = $.parseJSON(data);
+                  if (obj.status == "error") {
+                      alert(obj.data[0].reason);
+                  } else {
+						alert(obj.data[widgetNumber].description);
+						var image = document.getElementById("widget_image");
+						image.style.display = "block";
+						image.src = obj.data[widgetNumber].url;	
+					}
+			  });
+	  };
+	   
+	   
 	   
       } //end of megaMaxSale function
       this.megaMaxSale = new megaMaxSale();
