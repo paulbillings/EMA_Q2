@@ -1,46 +1,107 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+/* global plugin */
+
+
+/**
+ * Utility to get default value from the field name if it was undefined or empty
+ * @param {type} fieldName
+ * @param {type} defaultValue
+ * @returns {jQuery}
+ */
+function isLetter(str) {
+    return str.length === 1 && str.match(/[a-z]/i);
+}
+function isNumber(str) {
+    return str.length === 1 && str.match(/[0-9]/);
+}
+
+function get_name_value(fieldName, defaultValue) {
+    var value = $('#' + fieldName).val();
+    if (value == "") {
+       value = defaultValue;
+       $('#' + fieldName).val(value);
+    }
+    if (fieldName == "name") {
+        if (!(isLetter(value.charAt(0)) && isNumber(value.charAt(value.length - 1)))) {
+            alert("Please enter the correct value");
+            return "";
+        }
+    }
+    return value;
+}
+
+/**
+ * This is the main class
  */
 var app = {
-    // Application Constructor
     initialize: function() {
-        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+        this.bindEvents();
     },
+    bindEvents: function() {
+      var widgetNumber = -1;
+      function megaMaxSale() {
+		// code to go here
+       
+	    this.previousWidget = function () {
+			widgetNumber--;
+			if (widgetNumber < 0) {
+				alert('Reached beginning of list');
+				widgetNumber = 0;
+			}
+	    
+            /* Invoke the RESTful API to get widget details*/
+			$.get('http://137.108.93.222/openstack/api/widgets?OUCU=pb8255&password=CKJ8SgSY',
+              function (data) {
+                  var obj = $.parseJSON(data);
+                  if (obj.status == "error") {
+                      alert(obj.data[0].reason);
+                  } else {
+						//alert(obj.data[widgetNumber].description);
+						var image = document.getElementById("widget_image");
+						image.style.display = "block";
+						image.src = obj.data[widgetNumber].url;
+						
+						var disc = obj.data[widgetNumber].description;
+						document.getElementById('description').innerHTML = disc;
+						
+						var price = obj.data[widgetNumber].pence_price;
+						document.getElementById('price').innerHTML = price;
+					}
+			  });
+	  };
+	   
 
-    // deviceready Event Handler
-    //
-    // Bind any cordova events here. Common events are:
-    // 'pause', 'resume', etc.
-    onDeviceReady: function() {
-        this.receivedEvent('deviceready');
-    },
-
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
-    }
+	   this.nextWidget = function () {
+			widgetNumber++;
+			if (widgetNumber > 9) {
+				alert('Reached end of list');
+				widgetNumber = 9;
+			}
+	    
+            /* Invoke the RESTful API to get widget details*/
+			$.get('http://137.108.93.222/openstack/api/widgets?OUCU=pb8255&password=CKJ8SgSY',
+              function (data) {
+                  var obj = $.parseJSON(data);
+                  if (obj.status == "error") {
+                      alert(obj.data[0].reason);
+                  } else {
+						//alert(obj.data[widgetNumber].description);
+						var image = document.getElementById("widget_image");
+						image.style.display = "block";
+						image.src = obj.data[widgetNumber].url;
+						
+						var disc = obj.data[widgetNumber].description;
+						document.getElementById('description').innerHTML = disc;
+						
+						var price = obj.data[widgetNumber].pence_price;
+						document.getElementById('price').innerHTML = price;
+					}
+			  });
+	  };
+	   
+	   
+	   
+      } //end of megaMaxSale function
+      this.megaMaxSale = new megaMaxSale();
+    }    
 };
-
 app.initialize();

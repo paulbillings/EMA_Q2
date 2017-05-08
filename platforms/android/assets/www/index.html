@@ -35,19 +35,19 @@
 			<!-- TODO II. Widget navigation buttons -->
 			<div class="ui-grid-c" >
 				<div class="ui-block-a">Widget selection:</div>
-				<div class="ui-block-b"><button type=button id="previousWidget" onclick="">Prev</button></div>
-				<div class="ui-block-c"><button type=button id="nextWidget" onclick="">Next</button></div>
+				<div class="ui-block-b"><button type=button id="previousWidget" onclick="app.megaMaxSale.previousWidget()">Prev</button></div>
+				<div class="ui-block-c"><button type=button id="nextWidget" onclick="app.megaMaxSale.nextWidget()">Next</button></div>
 				<div class="ui-block-d"><input type="text" name="quantity" id="quantity" placeholder="Quantity"/></div>
 			</div>	
 	    </div>
         <div data-role="controlgroup" data-type="horizontal">
 			<!-- TODO III. Widget display-->
-			<canvas style="width:98%;height:25%;border-style:solid;" id="widget_canvas">
-			</canvas>
-			<div id="description" placeholder="Widget description goes here"></div>
-			<div class="ui-grid-a">
-				<div class="ui-block-a"><input type="text" name="price" id="price" placeholder="Asking price"/></div>
-				<div class="ui-block-b"><input type="text" name="discounted" id="discounted" placeholder="Discounted"/></div>
+			<image height="240" width="99%" src="" id="widget_image" />
+			<div id="description" ></div>
+			<div class="ui-grid-b">
+				<div class="ui-block-a">Asking Price:</div>
+				<div class="ui-block-b"><span type="text" width="25%" id="price"></span></div>
+				<div class="ui-block-c"><input type="text" name="discounted" id="discounted" placeholder="Discounted"/></div>
 			</div>
 		</div>
         <div data-role="controlgroup" data-type="horizontal">
