@@ -36,6 +36,15 @@ function get_pass_value(fieldName) {
     return value;
 }
 
+function get_client_value(fieldName) {
+    var value = $('#' + fieldName).val();
+    if (value == "") {
+		alert("Please enter a Client ID");
+		return "";
+    }
+    return value;
+}
+
 /**
  * This is the main class
  */
@@ -113,10 +122,91 @@ var app = {
 			  });
 	  };
 	   
+	    this.nextOrder = function () {
+			
+			//get salesperson and password
+			var oucu = get_name_value('salesperson'); 
+			var pass = get_pass_value('password');
+			var clientInput = get_pass_value('client_id');
+			var client = "";
+	    
+            /* Invoke the RESTful API to get widget details*/
+			$.get('http://137.108.93.222/openstack/api/orders?OUCU='+ oucu + '&password=' + pass,
+              function (data) {
+                  var obj = $.parseJSON(data);
+                  if (obj.status == "fail") {
+                      alert(obj.data[0].reason);
+                  } else {
+						$.each(obj.data, function (index, value) {
+							//display description
+							client = value.client_id;
+							//TODO client when = 1 and clientInput = 2, with only 1 in rest api, will carry on with value as 1. need it to = ""
+							if (client == clientInput) {
+								document.getElementById('orderDetails').innerHTML = client;
+								client = "";
+							}
+						})
+					
+					}
+					
+				if (client != "" && client != clientInput) {
+				  var url = "http://137.108.93.222/openstack/api/orders";
+                          $.ajax({
+                              url: url,
+                              type: 'POST',
+                              data: {
+								OUCU: oucu,
+								password: pass,
+								client_id: clientInput,
+								date: '2017-05-01 15:31:44',
+								latitude: 0.00000000,
+								longitude: 0.00000000
+                              },
+                              success: function (result) {
+                                  alert("POSTed" + result);
+                              }
+                          });
+				document.getElementById('orderDetails').innerHTML = clientInput
+			  } else {
+				  alert('Order already open');
+			  } 	
+					
+			  });
+			  
+			/* 
+			 if (client != "") {
+				  var url = "http://137.108.93.222/openstack/api/orders";
+                          $.ajax({
+                              url: url,
+                              type: 'POST',
+                              data: {
+								OUCU: oucu,
+								password: pass,
+								client_id: clientInput,
+								date: '2017-05-01 15:31:44',
+								latitude: 0.00000000,
+								longitude: 0.00000000
+                              },
+                              success: function (result) {
+                                  alert("POSTed" + result);
+                              }
+                          });
+			  } else {
+				  alert('Order already open');
+			  } */
+			  
+			  
+			  
+			  
+			  
+			  
+			  
+			
 	   
-	   //FR1.3
 	   
 	   
+		};	
+	 
 	   
       } //end of megaMaxSale function
       this.megaMaxSale = new megaMaxSale();
