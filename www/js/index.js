@@ -27,6 +27,15 @@ function get_name_value(fieldName) {
     return value;
 }
 
+function get_pass_value(fieldName) {
+    var value = $('#' + fieldName).val();
+    if (value == "") {
+		alert("Please enter a password");
+		return "";
+    }
+    return value;
+}
+
 /**
  * This is the main class
  */
@@ -37,13 +46,13 @@ var app = {
     bindEvents: function() {
       var widgetNumber = -1;
       function megaMaxSale() {
-		// code to go here
-       
+		
+       //FR1.2
 	    this.previousWidget = function () {
 			
 			//get salesperson and password
 			var oucu = get_name_value('salesperson'); 
-			var pass = $('#' + 'password').val();
+			var pass = get_pass_value('password');
 		
 			widgetNumber--;
 			if (widgetNumber < 0) {
@@ -56,7 +65,7 @@ var app = {
               function (data) {
                   var obj = $.parseJSON(data);
                   if (obj.status == "error") {
-                      alert(obj.data[0].reason);
+                      alert(obj.message);
                   } else {
 						//display widget image
 						var image = document.getElementById("widget_image");
@@ -81,14 +90,14 @@ var app = {
 			}
 			//get salesperson and password
 			var oucu = get_name_value('salesperson'); 
-			var pass = $('#' + 'password').val();
+			var pass = get_pass_value('password');
 	    
             /* Invoke the RESTful API to get widget details*/
 			$.get('http://137.108.93.222/openstack/api/widgets?OUCU='+ oucu + '&password=' + pass,
               function (data) {
                   var obj = $.parseJSON(data);
                   if (obj.status == "error") {
-                      alert(obj.data[0].reason);
+                      alert(obj.message);
                   } else {
 						//display widget image
 						var image = document.getElementById("widget_image");
@@ -103,6 +112,9 @@ var app = {
 					}
 			  });
 	  };
+	   
+	   
+	   //FR1.3
 	   
 	   
 	   

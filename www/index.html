@@ -37,7 +37,7 @@
 				<div class="ui-block-a">Widget selection:</div>
 				<div class="ui-block-b"><button type=button id="previousWidget" onclick="app.megaMaxSale.previousWidget()">Prev</button></div>
 				<div class="ui-block-c"><button type=button id="nextWidget" onclick="app.megaMaxSale.nextWidget()">Next</button></div>
-				<div class="ui-block-d"><input type="text" name="quantity" id="quantity" placeholder="Quantity"/></div>
+				<div class="ui-block-d"><input type="number" name="quantity" id="quantity" placeholder="Quantity"/></div>
 			</div>	
 	    </div>
         <div data-role="controlgroup" data-type="horizontal">
@@ -46,7 +46,7 @@
 			<div id="description" ></div>
 			<div class="ui-grid-a">
 				<div class="ui-block-a"><input type="text" name="price" id="price" readonly placeholder="Price"/></div>
-				<div class="ui-block-b"><input type="text" name="discounted" id="discounted" placeholder="Discounted"/></div>
+				<div class="ui-block-b"><input type="number" name="discounted" min="0" max="100" id="discounted" placeholder="Discounted"/></div>
 			</div>
 		</div>
         <div data-role="controlgroup" data-type="horizontal">
