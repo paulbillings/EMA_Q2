@@ -93,7 +93,7 @@ var app = {
 						document.getElementById('description').innerHTML = disc;
 						
 						var price = obj.data[widgetNumber].pence_price;
-						document.getElementById('price').innerHTML = price;
+						document.getElementById('price').value = "Price = " + price + " p";
 					}
 			  });
 	  };
