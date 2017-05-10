@@ -131,7 +131,7 @@ var app = {
 			var client = "";
 			var order = "";
 			
-            /* Invoke the RESTful API to get widget details*/
+            /* Invoke the RESTful API to get order details*/
 			$.get('http://137.108.93.222/openstack/api/orders?OUCU='+ oucu + '&password=' + pass,
               function (data) {
                   var obj = $.parseJSON(data);
@@ -139,9 +139,6 @@ var app = {
                       alert(obj.data[0].reason);
                   } else {
 						$.each(obj.data, function (index, value) {
-							
-								
-							
 							//display description
 							client = value.client_id;
 							order = value.id;
@@ -166,7 +163,6 @@ var app = {
 								OUCU: oucu,
 								password: pass,
 								client_id: clientInput,
-								//date: '2017-05-01 15:31:44',
 								latitude: 0.00000000,
 								longitude: 0.00000000
                               },
@@ -180,8 +176,69 @@ var app = {
 			  } 	
 					
 			  });
-		};	
-	 
+		};
+
+
+		this.prevOrder = function () {
+			
+			//get salesperson and password
+			var oucu = get_name_value('salesperson'); 
+			var pass = get_pass_value('password');
+			
+			var clientInput = get_pass_value('client_id');
+			var client = "";
+			var order = "";
+			
+			
+			var url = "http://137.108.93.222/openstack/api/orders";
+                          $.ajax({
+                              url: url,
+                              type: 'POST',
+                              data: {
+								OUCU: oucu,
+								password: pass,
+								client_id: clientInput,
+								latitude: 0.00000000,
+								longitude: 0.00000000
+                              },
+                              success: function (result) {
+                                  alert("Posted: " + result);
+								
+									var parsedData = $.parseJSON(result);
+									order = parsedData.data[0].id;
+                              }
+                          });
+						  
+							
+						  
+						  
+							$.get('http://137.108.93.222/openstack/api/order_items?OUCU='+ oucu + '&password=' + pass + '&order_id=' + order,
+								function (data) {
+									var obj = $.parseJSON(data);
+									if (obj.status == "fail") {
+										alert(obj.data[0].reason);
+									} else {
+										oblenth = Object.keys(obj.data).length;
+										alert(oblenth);
+										if (Object.keys(obj.data).length > 0) {
+											$.each(obj.data, function (index, value) {
+											//display widget
+											var widget = "widget " + value.widget_id;
+											//display price
+											var price = value.pence_price;
+											//display number
+											var number = value.number;
+											var result = number + " x " + widget + ' price = ' + price;
+											document.getElementById('orderDetails').innerHTML = result;
+											'\n';
+											} 
+										)} 
+									
+									}
+								});
+			
+           
+		};
 	   
       } //end of megaMaxSale function
       this.megaMaxSale = new megaMaxSale();
