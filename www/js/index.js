@@ -53,7 +53,13 @@ var app = {
         this.bindEvents();
     },
     bindEvents: function() {
-      var widgetNumber = -1;
+      var widgetNumber = 7;
+	  var widgetNumber2 = widgetNumber - 8;
+	  //global variables
+		var order_id = "";
+		//var number;
+		var price = "";
+	  
       function megaMaxSale() {
 		
        //FR1.2
@@ -64,9 +70,11 @@ var app = {
 			var pass = get_pass_value('password');
 		
 			widgetNumber--;
-			if (widgetNumber < 0) {
+			widgetNumber2 = widgetNumber - 8;
+			if (widgetNumber < 8) {
 				alert('Reached beginning of list');
-				widgetNumber = 0;
+				widgetNumber = 8;
+				widgetNumber2 = widgetNumber - 8;
 			}
 			
             /* Invoke the RESTful API to get widget details*/
@@ -79,12 +87,12 @@ var app = {
 						//display widget image
 						var image = document.getElementById("widget_image");
 						image.style.display = "block";
-						image.src = obj.data[widgetNumber].url;
+						image.src = obj.data[widgetNumber2].url;
 						//display description
-						var disc = obj.data[widgetNumber].description;
+						var disc = obj.data[widgetNumber2].description;
 						document.getElementById('description').innerHTML = disc;
 						//display price
-						var price = obj.data[widgetNumber].pence_price;
+						price = obj.data[widgetNumber2].pence_price;
 						document.getElementById('price').innerHTML = price;
 					}
 			  });
@@ -93,9 +101,11 @@ var app = {
 
 	   this.nextWidget = function () {
 			widgetNumber++;
-			if (widgetNumber > 9) {
+			widgetNumber2 = widgetNumber - 8;
+			if (widgetNumber > 17) {
 				alert('Reached end of list');
-				widgetNumber = 9;
+				widgetNumber = 17;
+				widgetNumber2 = widgetNumber - 8;
 			}
 			//get salesperson and password
 			var oucu = get_name_value('salesperson'); 
@@ -111,12 +121,12 @@ var app = {
 						//display widget image
 						var image = document.getElementById("widget_image");
 						image.style.display = "block";
-						image.src = obj.data[widgetNumber].url;
+						image.src = obj.data[widgetNumber2].url;
 						//display description
-						var disc = obj.data[widgetNumber].description;
+						var disc = obj.data[widgetNumber2].description;
 						document.getElementById('description').innerHTML = disc;
 						//display price
-						var price = obj.data[widgetNumber].pence_price;
+						price = obj.data[widgetNumber2].pence_price;
 						document.getElementById('price').value = "Price = " + price + "p";
 					}
 			  });
@@ -129,7 +139,7 @@ var app = {
 			var pass = get_pass_value('password');
 			var clientInput = get_pass_value('client_id');
 			var client = "";
-			var order = "";
+			//var order = "";
 			
             /* Invoke the RESTful API to get order details*/
 			$.get('http://137.108.93.222/openstack/api/orders?OUCU='+ oucu + '&password=' + pass,
@@ -179,7 +189,7 @@ var app = {
 		};
 
 
-		this.prevOrder = function () {
+		this.newOrder = function () {
 			
 			//get salesperson and password
 			var oucu = get_name_value('salesperson'); 
@@ -205,14 +215,53 @@ var app = {
                                   alert("Posted: " + result);
 								
 									var parsedData = $.parseJSON(result);
-									order = parsedData.data[0].id;
+									order_id = parsedData.data[0].id;
+									alert(order_id);
                               }
-                          });
-						  
-							
-						  
-						  
-							$.get('http://137.108.93.222/openstack/api/order_items?OUCU='+ oucu + '&password=' + pass + '&order_id=' + order,
+                          });  
+		};
+		
+		
+		this.addToOrder = function () {
+			
+			var oucu = get_name_value('salesperson'); 
+			var pass = get_pass_value('password');
+			var order = order_id;
+			var widget_id = widgetNumber;
+			var amount = 10; //for now - need to implement Quantity input
+			var pence_price = price;
+			var discount = 10; //for now - need to implement discounted input
+			var agreedPrice = pence_price - ((pence_price / 100) * discount); 
+			
+			//get the discount amount and take off price = agreedPrice
+			
+			
+			var url = "http://137.108.93.222/openstack/api/order_items";
+                          $.ajax({
+                              url: url,
+                              type: 'POST',
+                              data: {
+								OUCU: oucu,
+								password: pass,
+								order_id: order,
+								widget_id: widgetNumber,
+								number: amount,
+								pence_price: 17
+                              },
+                              success: function (result) {
+                                  alert("Posted: " + result);
+								
+									//var parsedData = $.parseJSON(result);
+									//order_id = parsedData.data[0].id;
+                              }
+                          });  
+			
+			
+			
+			
+			
+			
+			$.get('http://137.108.93.222/openstack/api/order_items?OUCU='+ oucu + '&password=' + pass + '&order_id=' + order,
 								function (data) {
 									var obj = $.parseJSON(data);
 									if (obj.status == "fail") {
@@ -223,22 +272,27 @@ var app = {
 										if (Object.keys(obj.data).length > 0) {
 											$.each(obj.data, function (index, value) {
 											//display widget
-											var widget = "widget " + value.widget_id;
+											var widgetInfo = value.widget_id;
 											//display price
-											var price = value.pence_price;
+											var priceReceived = value.pence_price;
 											//display number
-											var number = value.number;
-											var result = number + " x " + widget + ' price = ' + price;
+											var numberOf = value.number;
+											var result = numberOf + " x " + 'widget No ' + widgetInfo + ' price = ' + priceReceived;
 											document.getElementById('orderDetails').innerHTML = result;
 											'\n';
 											} 
 										)} 
 									
 									}
-								});
+								}); 
 			
-           
-		};
+			
+			
+			
+		}
+		
+		
+		
 	   
       } //end of megaMaxSale function
       this.megaMaxSale = new megaMaxSale();

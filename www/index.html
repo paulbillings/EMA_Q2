@@ -28,7 +28,7 @@
 			<div class="ui-grid-b">
 				<div class="ui-block-a"><input type="text" name="salesperson" id="salesperson" placeholder="Salesperson ID"/></div>
 				<div class="ui-block-b"><input type="text" name="password" id="password" placeholder="Password"/></div>
-				<div class="ui-block-c"><input type="text" name="client" id="client_id"	placeholder="Client ID"/></div>
+				<div class="ui-block-c"><input type="text" name="client" id="client_id"	placeholder="Client ID" /></div>
 			</div>
 	    </div>
         <div data-role="controlgroup" data-type="horizontal">
@@ -37,7 +37,7 @@
 				<div class="ui-block-a">Widget selection:</div>
 				<div class="ui-block-b"><button type=button id="previousWidget" onclick="app.megaMaxSale.previousWidget()">Prev</button></div>
 				<div class="ui-block-c"><button type=button id="nextWidget" onclick="app.megaMaxSale.nextWidget()">Next</button></div>
-				<div class="ui-block-d"><input type="number" name="quantity" id="quantity" placeholder="Quantity"/></div>
+				<div class="ui-block-d"><input type="number" name="quantity" id="quantity" placeholder="Quantity" onfocusout="app.megaMaxSale.newOrder()" /></div>
 			</div>	
 	    </div>
         <div data-role="controlgroup" data-type="horizontal">
@@ -51,9 +51,9 @@
 		</div>
         <div data-role="controlgroup" data-type="horizontal">
 			<!-- TODO IV. Order navigation buttons and display -->
-			<button type=button data-mini="true" id="previousOrder" onclick="app.megaMaxSale.prevOrder()">Prev Order</button>
+			<button type=button data-mini="true" id="previousOrder" onclick="">Prev Order</button>
 			<button type=button data-mini="true" id="nextOrder" onclick="app.megaMaxSale.nextOrder()">Next Order</button>
-			<button type=button data-mini="true" id="addToOrder" onclick="">Add to Order</button>
+			<button type=button data-mini="true" id="addToOrder" onclick="app.megaMaxSale.addToOrder()">Add to Order</button>
 			<div id="orderDetails"></div>
         </div>
 			<!-- TODO V. Map canvas -->
