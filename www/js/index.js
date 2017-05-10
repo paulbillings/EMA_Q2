@@ -129,7 +129,8 @@ var app = {
 			var pass = get_pass_value('password');
 			var clientInput = get_pass_value('client_id');
 			var client = "";
-	    
+			var order = "";
+			
             /* Invoke the RESTful API to get widget details*/
 			$.get('http://137.108.93.222/openstack/api/orders?OUCU='+ oucu + '&password=' + pass,
               function (data) {
@@ -138,17 +139,24 @@ var app = {
                       alert(obj.data[0].reason);
                   } else {
 						$.each(obj.data, function (index, value) {
+							
+								
+							
 							//display description
 							client = value.client_id;
-							//TODO client when = 1 and clientInput = 2, with only 1 in rest api, will carry on with value as 1. need it to = ""
-							if (client == clientInput) {
+							order = value.id;
+							//get order details if inputted client ID matches order record
+							if (client === clientInput) {
+								
 								document.getElementById('orderDetails').innerHTML = client;
 								client = "";
+								return false;
 							}
+							
 						})
 					
 					}
-					
+				//if no order found for client create one	
 				if (client != "" && client != clientInput) {
 				  var url = "http://137.108.93.222/openstack/api/orders";
                           $.ajax({
@@ -158,7 +166,7 @@ var app = {
 								OUCU: oucu,
 								password: pass,
 								client_id: clientInput,
-								date: '2017-05-01 15:31:44',
+								//date: '2017-05-01 15:31:44',
 								latitude: 0.00000000,
 								longitude: 0.00000000
                               },
@@ -172,39 +180,6 @@ var app = {
 			  } 	
 					
 			  });
-			  
-			/* 
-			 if (client != "") {
-				  var url = "http://137.108.93.222/openstack/api/orders";
-                          $.ajax({
-                              url: url,
-                              type: 'POST',
-                              data: {
-								OUCU: oucu,
-								password: pass,
-								client_id: clientInput,
-								date: '2017-05-01 15:31:44',
-								latitude: 0.00000000,
-								longitude: 0.00000000
-                              },
-                              success: function (result) {
-                                  alert("POSTed" + result);
-                              }
-                          });
-			  } else {
-				  alert('Order already open');
-			  } */
-			  
-			  
-			  
-			  
-			  
-			  
-			  
-			
-	   
-	   
-	   
 		};	
 	 
 	   
