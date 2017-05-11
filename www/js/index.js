@@ -251,23 +251,46 @@ var app = {
 									} else {
 										oblenth = Object.keys(obj.data).length;
 										alert(oblenth);
-										if (Object.keys(obj.data).length > 0) {
+										//if (Object.keys(obj.data).length > 0) {
+											var list = "";
+											var subtotal = 0;
+											document.getElementById("orderDetailsList").innerHTML = "";										
 											$.each(obj.data, function (index, value) {
-											//display widget
-											var widgetInfo = value.widget_id;
-											//display price
-											var priceReceived = value.pence_price;
-											//display number
-											var numberOf = value.number;
-											var result = numberOf + " x " + 'widget No ' + widgetInfo + ' price = ' + priceReceived;
-											document.getElementById('orderDetails').innerHTML = result;
-											'\n';
-											} 
-										)} 
+												var widgetInfo = value.widget_id;
+												var priceReceived = value.pence_price;
+												var numberOf = value.number;
+												var itemTotal = numberOf * priceReceived;
+												
+												var result = numberOf + " x " + '(widget No ' + widgetInfo + ')' + ' x ' + priceReceived + 'p ' + '= ' + itemTotal;
+												//document.getElementById('orderDetails').innerHTML = result + '/n';
+						
+											
+												list += "<li>" + result + "</li>";
+												subtotal += itemTotal;
+											}
+											
+										)
+										var vat = 20;
+										var vatTotal = vatAmount(vat, subtotal);
+										var grandTotal = subtotal + vatTotal;
+										list += "<li>" + 'Subtotal = ' + subtotal + "</li>";
+										list += "<li>" + 'VAT = ' + vatTotal + "</li>";
+										list += "<li>" + 'Grand Total = ' + grandTotal + "</li>";
+										//document.getElementById("orderDetailsList").append(list);
+										$("#orderDetailsList").append(list);
+										
+										//} 
 									
 									}
 								}); 
 		
+		}
+		
+		
+		function vatAmount (vat, subtotal) {
+			var result = (vat / 100) * subtotal;
+			result = Math.round(result);
+			return result;
 		}
 		
 		
