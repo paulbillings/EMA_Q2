@@ -249,12 +249,13 @@ var app = {
 									if (obj.status == "fail") {
 										alert(obj.data[0].reason);
 									} else {
-										oblenth = Object.keys(obj.data).length;
-										alert(oblenth);
-										//if (Object.keys(obj.data).length > 0) {
+										//oblenth = Object.keys(obj.data).length;
+										//alert(oblenth);
+										
 											var list = "";
 											var subtotal = 0;
-											document.getElementById("orderDetailsList").innerHTML = "";										
+											document.getElementById("orderDetailsList").innerHTML = "";	
+						//TODO Change list to table with 2 columns
 											$.each(obj.data, function (index, value) {
 												var widgetInfo = value.widget_id;
 												var priceReceived = value.pence_price;
@@ -262,7 +263,7 @@ var app = {
 												var itemTotal = numberOf * priceReceived;
 												
 												var result = numberOf + " x " + '(widget No ' + widgetInfo + ')' + ' x ' + priceReceived + 'p ' + '= ' + itemTotal;
-												//document.getElementById('orderDetails').innerHTML = result + '/n';
+												
 						
 											
 												list += "<li>" + result + "</li>";
@@ -279,7 +280,7 @@ var app = {
 										//document.getElementById("orderDetailsList").append(list);
 										$("#orderDetailsList").append(list);
 										
-										//} 
+										
 									
 									}
 								}); 
