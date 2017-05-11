@@ -45,6 +45,24 @@ function get_client_value(fieldName) {
     return value;
 }
 
+function get_quantity_value(fieldName) {
+    var value = $('#' + fieldName).val();
+    if (value == "" || value == "Quantity") {
+		alert("Please enter a quantity");
+		return "";
+    }
+    return value;
+}
+
+function get_discount_value(fieldName) {
+    var value = $('#' + fieldName).val();
+    if (value == "" || value == "Discount") {
+		//alert("Please enter a quantity");
+		return 0;
+    }
+    return value;
+}
+
 /**
  * This is the main class
  */
@@ -57,10 +75,12 @@ var app = {
 	  var widgetNumber2 = widgetNumber - 8;
 	  //global variables
 		var order_id = "";
-		//var number;
+		//var number = "";
 		var price = "";
 	  
       function megaMaxSale() {
+		  
+			
 		
        //FR1.2
 	    this.previousWidget = function () {
@@ -93,7 +113,7 @@ var app = {
 						document.getElementById('description').innerHTML = disc;
 						//display price
 						price = obj.data[widgetNumber2].pence_price;
-						document.getElementById('price').innerHTML = price;
+						document.getElementById('price').value = "Price = " + price + "p";
 					}
 			  });
 	  };
@@ -194,10 +214,9 @@ var app = {
 			//get salesperson and password
 			var oucu = get_name_value('salesperson'); 
 			var pass = get_pass_value('password');
-			
 			var clientInput = get_pass_value('client_id');
-			var client = "";
-			var order = "";
+			//var client = "";
+			//var order = "";
 			
 			
 			var url = "http://137.108.93.222/openstack/api/orders";
@@ -222,46 +241,9 @@ var app = {
 		};
 		
 		
-		this.addToOrder = function () {
-			
-			var oucu = get_name_value('salesperson'); 
-			var pass = get_pass_value('password');
-			var order = order_id;
-			var widget_id = widgetNumber;
-			var amount = 10; //for now - need to implement Quantity input
-			var pence_price = price;
-			var discount = 10; //for now - need to implement discounted input
-			var agreedPrice = pence_price - ((pence_price / 100) * discount); 
-			
-			//get the discount amount and take off price = agreedPrice
-			
-			
-			var url = "http://137.108.93.222/openstack/api/order_items";
-                          $.ajax({
-                              url: url,
-                              type: 'POST',
-                              data: {
-								OUCU: oucu,
-								password: pass,
-								order_id: order,
-								widget_id: widgetNumber,
-								number: amount,
-								pence_price: 17
-                              },
-                              success: function (result) {
-                                  alert("Posted: " + result);
-								
-									//var parsedData = $.parseJSON(result);
-									//order_id = parsedData.data[0].id;
-                              }
-                          });  
-			
-			
-			
-			
-			
-			
-			$.get('http://137.108.93.222/openstack/api/order_items?OUCU='+ oucu + '&password=' + pass + '&order_id=' + order,
+		function getOrderItems(oucu, pass, order) {
+
+				$.get('http://137.108.93.222/openstack/api/order_items?OUCU='+ oucu + '&password=' + pass + '&order_id=' + order,
 								function (data) {
 									var obj = $.parseJSON(data);
 									if (obj.status == "fail") {
@@ -285,13 +267,56 @@ var app = {
 									
 									}
 								}); 
-			
-			
-			
-			
+		
 		}
 		
 		
+		
+		function discountAmount (discount, price) {
+			var result = (discount / 100) * price;
+			result = Math.round(result);
+			return result;
+		}
+		
+		
+		this.addToOrder = function () {
+			
+			var oucu = get_name_value('salesperson'); 
+			var pass = get_pass_value('password');
+			var order = order_id;
+			var widget_id = widgetNumber;
+			var amount = get_quantity_value('quantity');
+			var pence_price = price;
+			var discount = get_discount_value('discount');
+			var discountPence = discountAmount(discount, pence_price);
+			var agreedPrice = pence_price - discountPence; 
+			
+			
+			var url = "http://137.108.93.222/openstack/api/order_items";
+                          $.ajax({
+                              url: url,
+                              type: 'POST',
+                              data: {
+								OUCU: oucu,
+								password: pass,
+								order_id: order,
+								widget_id: widgetNumber,
+								number: amount,
+								pence_price: agreedPrice
+                              },
+                              success: function (result) {
+                                  alert("Posted: " + result);
+									getOrderItems(oucu, pass, order);
+									//var parsedData = $.parseJSON(result);
+									//order_id = parsedData.data[0].id;
+                              }
+                          }); 
+			  
+				
+		}
+		
+		
+	
 		
 	   
       } //end of megaMaxSale function
