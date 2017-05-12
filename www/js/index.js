@@ -262,11 +262,11 @@ var app = {
 												var numberOf = value.number;
 												var itemTotal = numberOf * priceReceived;
 												
-												var result = numberOf + " x " + '(widget No ' + widgetInfo + ')' + ' x ' + priceReceived + 'p ' + '= ' + itemTotal;
+												var result = numberOf + " x " + '(widget No ' + widgetInfo + ')' + ' x ' + priceReceived + 'p ' + '= ';
 												
 						
 											
-												list += "<li>" + result + "</li>";
+												list += "<li>" + result + '<div style="float:right;">' + itemTotal + 'p   '+ '</div>' + "</li>";
 												subtotal += itemTotal;
 											}
 											
@@ -274,9 +274,9 @@ var app = {
 										var vat = 20;
 										var vatTotal = vatAmount(vat, subtotal);
 										var grandTotal = subtotal + vatTotal;
-										list += "<li>" + 'Subtotal = ' + subtotal + "</li>";
-										list += "<li>" + 'VAT = ' + vatTotal + "</li>";
-										list += "<li>" + 'Grand Total = ' + grandTotal + "</li>";
+										list += "<li>" + 'Subtotal:' +  '<div style="float:right;">' + subtotal + 'p   ' + '</div>' + "</li>";
+										list += "<li>" + 'VAT:' +  '<div style="float:right;">' + vatTotal + 'p   ' + '</div>' + "</li>";
+										list += "<li>" + '<strong>' +'Grand Total:' + '</srong>' + '<div style="float:right;">' + grandTotal + 'p   '+ '</div>' + "</li>";
 										//document.getElementById("orderDetailsList").append(list);
 										$("#orderDetailsList").append(list);
 										
