@@ -35,7 +35,7 @@
                 "parents": {
                     "/manifest/application": [
                         {
-                            "xml": "<meta-data android:name=\"com.google.android.geo.API_KEY\" android:value=\"AIzaSyCvfbmi9IwPy5_R5HxwoILqrsFpFeTBqQs\" />",
+                            "xml": "<meta-data android:name=\"com.google.android.geo.API_KEY\" android:value=\"AIzaSyDjwRxivhvcDDiQxRqvU8VC_0j1-qXUtgE\" />",
                             "count": 1
                         },
                         {
@@ -100,7 +100,7 @@
             "PACKAGE_NAME": "com.coolappz.MegaMax_Sale"
         },
         "cordova-plugin-googlemaps": {
-            "API_KEY_FOR_ANDROID": "AIzaSyCvfbmi9IwPy5_R5HxwoILqrsFpFeTBqQs",
+            "API_KEY_FOR_ANDROID": "AIzaSyDjwRxivhvcDDiQxRqvU8VC_0j1-qXUtgE",
             "PACKAGE_NAME": "com.coolappz.MegaMax_Sale"
         },
         "cordova-plugin-compat": {

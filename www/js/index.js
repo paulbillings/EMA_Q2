@@ -71,16 +71,84 @@ var app = {
         this.bindEvents();
     },
     bindEvents: function() {
+		
       var widgetNumber = 7;
 	  var widgetNumber2 = widgetNumber - 8;
 	  //global variables
 		var order_id = "";
 		//var number = "";
 		var price = "";
-	  
+		 var address;
       function megaMaxSale() {
 		  
-			
+		  
+		  
+		  function updateMap(address) {
+				var onSuccess = function(position) {
+                  var div = document.getElementById("map_canvas");
+                  div.width = window.innerWidth-20;
+                  div.height = window.innerHeight*0.38-40;
+                  var map = plugin.google.maps.Map.getMap(div);
+                  
+                  //added an event listener
+                  map.addEventListener(plugin.google.maps.event.MAP_READY, onMapReady, false);
+                  
+                  function onMapReady() {
+					if (address == undefined) {  
+						map.setVisible(false);
+						plugin.google.maps.Map.setDiv(div);
+						var currentLocation = new plugin.google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+						//Add a marker to the map, at the current location with text
+						//map.addMarker({'position': currentLocation,
+						//	'title': "You are here"},
+						//function (marker){
+                        //    marker.showInfoWindow();
+                        //});
+					map.setZoom(11);
+					map.setCenter(currentLocation);
+					map.refreshLayout();
+					map.setVisible(true);
+					}
+					// Mark the address if it is defined
+					if (address != undefined) {
+                      // TODO 2(a) FR2.2
+					  var newAddress = encodeURI(address);
+					  var url = "http://nominatim.openstreetmap.org/search/" + newAddress + "?format=json&countrycode=gb&limit=1";
+					  $.get(url, function(data) {
+					    if (data.length > 0) {
+							map.setVisible(false);
+							var taxiLocation = new plugin.google.maps.LatLng(data[0].lat, data[0].lon);
+							map.addMarker({'position': taxiLocation,
+								'title': "Taxi!"
+							},
+							function(marker) {
+								marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+								marker.showInfoWindow();
+							});
+							map.setZoom(11);
+							map.setCenter(taxiLocation);
+							map.refreshLayout();
+							map.setVisible(true); 
+						}
+					  })
+					
+					}
+					}
+				 
+				};
+			 
+            var onError = function(error) {
+              alert('code: ' + error.code + '\n' +'message: ' + error.message + '\n');
+            };
+            navigator.geolocation.getCurrentPosition(onSuccess, onError, { enableHighAccuracy: true });
+        }
+		 
+		  
+		  
+		  
+		  
+		  
+
 		
        //FR1.2
 	    this.previousWidget = function () {
@@ -211,6 +279,8 @@ var app = {
 
 		this.newOrder = function () {
 			
+			
+			
 			//get salesperson and password
 			var oucu = get_name_value('salesperson'); 
 			var pass = get_pass_value('password');
@@ -255,17 +325,14 @@ var app = {
 											var list = "";
 											var subtotal = 0;
 											document.getElementById("orderDetailsList").innerHTML = "";	
-						//TODO Change list to table with 2 columns
+						
 											$.each(obj.data, function (index, value) {
 												var widgetInfo = value.widget_id;
 												var priceReceived = value.pence_price;
 												var numberOf = value.number;
 												var itemTotal = numberOf * priceReceived;
-												
 												var result = numberOf + " x " + '(widget No ' + widgetInfo + ')' + ' x ' + priceReceived + 'p ' + '= ';
 												
-						
-											
 												list += "<li>" + result + '<div style="float:right;">' + itemTotal + 'p   '+ '</div>' + "</li>";
 												subtotal += itemTotal;
 											}
@@ -276,12 +343,9 @@ var app = {
 										var grandTotal = subtotal + vatTotal;
 										list += "<li>" + 'Subtotal:' +  '<div style="float:right;">' + subtotal + 'p   ' + '</div>' + "</li>";
 										list += "<li>" + 'VAT:' +  '<div style="float:right;">' + vatTotal + 'p   ' + '</div>' + "</li>";
-										list += "<li>" + '<strong>' +'Grand Total:' + '</srong>' + '<div style="float:right;">' + grandTotal + 'p   '+ '</div>' + "</li>";
+										list += "<li>" + '<strong>' +'Grand Total:' + '<div style="float:right;">' + grandTotal + 'p   '+ '</div>' + '</strong>' + "</li>";
 										//document.getElementById("orderDetailsList").append(list);
 										$("#orderDetailsList").append(list);
-										
-										
-									
 									}
 								}); 
 		
@@ -340,8 +404,15 @@ var app = {
 		}
 		
 		
-	
 		
+		
+		
+		
+		
+		
+		
+	
+		updateMap(address);
 	   
       } //end of megaMaxSale function
       this.megaMaxSale = new megaMaxSale();
