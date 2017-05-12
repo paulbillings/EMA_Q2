@@ -293,11 +293,6 @@ var app = {
 			function showPosition(position) {
 				lat = position.coords.latitude;
 				lon = position.coords.longitude;
-				//var latlon = [lat, lon];
-				//alert(lat);
-				//alert(lon);
-				//alert(latlon);
-				return latlon;
 			}
 		
 		
@@ -308,7 +303,6 @@ var app = {
 		this.newOrder = function () {
 			
 			updateMap(address);
-			//load_position();
 			load_position();
 			var lat1 = lat;
 			var lon2 = lon;
@@ -441,11 +435,7 @@ var app = {
 		
 		
 		this.placeOrdersOnMap = function () {
-			load_position();
-			var lat1 = lat;
-			var lon2 = lon;
-			alert(lat1);
-			alert(lon2);
+			
 		}
 		
 		
