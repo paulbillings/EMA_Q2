@@ -261,8 +261,8 @@ var app = {
 								OUCU: oucu,
 								password: pass,
 								client_id: clientInput,
-								latitude: 0.00000000,
-								longitude: 0.00000000
+								latitude: position.coords.latitude,
+								longitude: position.coords.longitude
                               },
                               success: function (result) {
                                   alert("POSTed" + result);
@@ -279,12 +279,22 @@ var app = {
 
 		this.newOrder = function () {
 			
+			updateMap(address);
+			
+			var lat;
+			var lon;
+			
+			navigator.geolocation.getCurrentPosition(function(position) {
+            lat = position.coords.latitude;
+            lon = position.coords.longitude;
+            });
 			
 			
 			//get salesperson and password
 			var oucu = get_name_value('salesperson'); 
 			var pass = get_pass_value('password');
 			var clientInput = get_pass_value('client_id');
+			
 			//var client = "";
 			//var order = "";
 			
@@ -297,8 +307,8 @@ var app = {
 								OUCU: oucu,
 								password: pass,
 								client_id: clientInput,
-								latitude: 0.00000000,
-								longitude: 0.00000000
+								latitude: lat,
+								longitude: lon
                               },
                               success: function (result) {
                                   alert("Posted: " + result);
@@ -404,15 +414,15 @@ var app = {
 		}
 		
 		
+		this.placeOrdersOnMap = function () {
+			
+		}
 		
 		
 		
 		
 		
-		
-		
-	
-		updateMap(address);
+
 	   
       } //end of megaMaxSale function
       this.megaMaxSale = new megaMaxSale();

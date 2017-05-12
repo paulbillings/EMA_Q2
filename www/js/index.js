@@ -79,6 +79,9 @@ var app = {
 		//var number = "";
 		var price = "";
 		 var address;
+		 var lat;
+		 var lon;
+		 
       function megaMaxSale() {
 		  
 		  
@@ -261,8 +264,8 @@ var app = {
 								OUCU: oucu,
 								password: pass,
 								client_id: clientInput,
-								latitude: 0.00000000,
-								longitude: 0.00000000
+								latitude: position.coords.latitude,
+								longitude: position.coords.longitude
                               },
                               success: function (result) {
                                   alert("POSTed" + result);
@@ -277,14 +280,47 @@ var app = {
 		};
 
 
+		
+		
+		function load_position() {
+				if (navigator.geolocation) {
+						navigator.geolocation.getCurrentPosition(showPosition);
+				} 
+				else { 
+					alert('Geolocation is not supported by this browser.');
+					}
+			}
+			function showPosition(position) {
+				lat = position.coords.latitude;
+				lon = position.coords.longitude;
+				//var latlon = [lat, lon];
+				//alert(lat);
+				//alert(lon);
+				//alert(latlon);
+				return latlon;
+			}
+		
+		
+		
+		
+		
+		
 		this.newOrder = function () {
 			
+			updateMap(address);
+			//load_position();
+			load_position();
+			var lat1 = lat;
+			var lon2 = lon;
+			//alert(lat1);
+			//alert(lon2);
 			
 			
 			//get salesperson and password
 			var oucu = get_name_value('salesperson'); 
 			var pass = get_pass_value('password');
 			var clientInput = get_pass_value('client_id');
+			
 			//var client = "";
 			//var order = "";
 			
@@ -297,8 +333,8 @@ var app = {
 								OUCU: oucu,
 								password: pass,
 								client_id: clientInput,
-								latitude: 0.00000000,
-								longitude: 0.00000000
+								latitude: lat1,
+								longitude: lon2
                               },
                               success: function (result) {
                                   alert("Posted: " + result);
@@ -404,15 +440,19 @@ var app = {
 		}
 		
 		
+		this.placeOrdersOnMap = function () {
+			load_position();
+			var lat1 = lat;
+			var lon2 = lon;
+			alert(lat1);
+			alert(lon2);
+		}
 		
 		
 		
 		
-		
-		
-		
-	
-		updateMap(address);
+		load_position();
+
 	   
       } //end of megaMaxSale function
       this.megaMaxSale = new megaMaxSale();
