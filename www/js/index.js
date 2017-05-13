@@ -72,17 +72,16 @@ var app = {
     },
     bindEvents: function() {
 		
-      var widgetNumber = 7;
-	  var widgetNumber2 = widgetNumber - 8;
-	  //global variables
+		 //global variables
+		var widgetNumber = 7;
+		var widgetNumber2 = widgetNumber - 8;
 		var order_id = "";
-		//var number = "";
 		var price = "";
-		 var address;
-		 var lat;
-		 var lon;
-		 var clientLat;
-		 var clientLon;
+		var address; //still using this??
+		var lat;
+		var lon;
+		var clientLat;
+		var clientLon;
 		 
       function megaMaxSale() {
 		  
@@ -139,10 +138,7 @@ var app = {
             navigator.geolocation.getCurrentPosition(onSuccess, onError);
         }
 		  
-		  
-	
 		 
-
 		
        //FR1.2
 	    this.previousWidget = function () {
@@ -213,67 +209,7 @@ var app = {
 					}
 			  });
 	  };
-	   
-	 /*   this.nextOrder = function () {
-			
-			//get salesperson and password
-			var oucu = get_name_value('salesperson'); 
-			var pass = get_pass_value('password');
-			//var clientInput = get_pass_value('client_id');
-			//var client = "";
-			//var order = "";
-			var date;
-			
-            /* Invoke the RESTful API to get order details*/
-		/*	$.get('http://137.108.93.222/openstack/api/orders?OUCU='+ oucu + '&password=' + pass,
-              function (data) {
-                  var obj = $.parseJSON(data);
-                  if (obj.status == "fail") {
-                      alert(obj.data[0].reason);
-                  } else {
-						$.each(obj.data, function (index, value) {
-							//display description
-							//client = value.client_id;
-							order = value.id;
-							
-							//get order details if inputted client ID matches order record
-							if (client === clientInput) {
-								
-								document.getElementById('orderDetails').innerHTML = client;
-								client = "";
-								return false;
-							}
-							
-						})
-					
-					}
-				//if no order found for client create one	
-				if (client != "" && client != clientInput) {
-				  var url = "http://137.108.93.222/openstack/api/orders";
-                          $.ajax({
-                              url: url,
-                              type: 'POST',
-                              data: {
-								OUCU: oucu,
-								password: pass,
-								client_id: clientInput,
-								latitude: position.coords.latitude,
-								longitude: position.coords.longitude
-                              },
-                              success: function (result) {
-                                  alert("POSTed" + result);
-                              }
-                          });
-				document.getElementById('orderDetails').innerHTML = clientInput
-			  } else {
-				  alert('Order already open');
-			  } 	
-					
-			  });
-		} */
-
-
-		
+	
 		
 		function load_position() {
 				if (navigator.geolocation) {
@@ -290,25 +226,17 @@ var app = {
 		
 		
 		
-		
-		
-		
 		this.newOrder = function () {
 			
 			updateMap(address);
 			load_position();
 			var lat1 = lat;
 			var lon2 = lon;
-			//alert(lat1);
-			//alert(lon2);
-			
-			//get salesperson and password
 			var oucu = get_name_value('salesperson'); 
 			var pass = get_pass_value('password');
 			var clientInput = get_pass_value('client_id');
 			
-			//var client = "";
-			//var order = "";
+			
 			
 			
 			var url = "http://137.108.93.222/openstack/api/orders";
@@ -323,13 +251,14 @@ var app = {
 								longitude: lon2
                               },
                               success: function (result) {
-                                  alert("Posted: " + result);
+                                  //alert("Posted: " + result);
 								
 									var parsedData = $.parseJSON(result);
 									order_id = parsedData.data[0].id;
-									alert(order_id);
+									//alert(order_id);
                               }
                           });  
+		 this.nextWidget();
 		}
 		
 		
@@ -341,9 +270,6 @@ var app = {
 									if (obj.status == "fail") {
 										alert(obj.data[0].reason);
 									} else {
-										//oblenth = Object.keys(obj.data).length;
-										//alert(oblenth);
-										
 											var list = "";
 											var subtotal = 0;
 											document.getElementById("orderDetailsList").innerHTML = "";	
@@ -366,7 +292,6 @@ var app = {
 										list += "<li>" + 'Subtotal:' +  '<div style="float:right;">' + subtotal + 'p   ' + '</div>' + "</li>";
 										list += "<li>" + 'VAT:' +  '<div style="float:right;">' + vatTotal + 'p   ' + '</div>' + "</li>";
 										list += "<li>" + '<strong>' +'Grand Total:' + '<div style="float:right;">' + grandTotal + 'p   '+ '</div>' + '</strong>' + "</li>";
-										//document.getElementById("orderDetailsList").append(list);
 										$("#orderDetailsList").append(list);
 									}
 								}); 
@@ -415,10 +340,8 @@ var app = {
 								pence_price: agreedPrice
                               },
                               success: function (result) {
-                                  alert("Posted: " + result);
+                                  //alert("Posted: " + result);
 									getOrderItems(oucu, pass, order);
-									//var parsedData = $.parseJSON(result);
-									//order_id = parsedData.data[0].id;
                               }
                           }); 
 			  
@@ -427,12 +350,9 @@ var app = {
 		
 		
 		this.placeOrdersOnMap = function () {
-			//get salesperson and password
+			
 			var oucu = get_name_value('salesperson'); 
 			var pass = get_pass_value('password');
-			//var clientInput = get_pass_value('client_id');
-			//var client = "";
-			//var order = "";
 			var date1;
 			var orderLat;
 			var orderLon;
@@ -445,30 +365,19 @@ var app = {
                       alert(obj.data[0].reason);
                   } else {
 						$.each(obj.data, function (index, value) {
-							//display description
-							//client = value.client_id;
+							
 							order = value.id;
 							date1 = value.date;
 							orderLat = value.latitude;
 							orderLon = value.longitude;
 							
-							var date = new Date(date1);
-							var curr_date = date.getDate();
-							var curr_month = date.getMonth() + 1; 
-							if (curr_month < 10) {
-								curr_month = "0" + curr_month;
-							} 
-							var curr_year = date.getFullYear();
+							var orderDate = new Date(date1);
+							var convOrderDate = convertDate(orderDate);
 							
-							var refinedDate = (curr_year + "-" + curr_month + "-" + curr_date);
+							var todaysDate = new Date();
+							var convTodaysDate = convertDate(todaysDate);
 							
-							
-							
-							//date.format("yyyy-mm-dd");
-							//alert(refinedDate);
-							//get order details if inputted client ID matches order record
-							
-							if (refinedDate == "2017-05-13") {
+							if (convOrderDate == convTodaysDate) {
 								alert('i did it');
 								updateMap(orderLat, orderLon);
 							}
@@ -483,7 +392,19 @@ var app = {
 		
 		
 		
+		function convertDate (date) {
+			var aDate = date.getDate();
+			var aMonth = date.getMonth() + 1; 
+			if (aMonth < 10) {
+				aMonth = "0" + aMonth;
+			} 
+			var aYear = date.getFullYear();
+			var convertedDate = (aYear + "-" + aMonth + "-" + aDate);
+			return convertedDate;
+		}
 		
+		
+		// LOSE THIS BEFORE SUBMITTING
 		load_position();
 
 	   
