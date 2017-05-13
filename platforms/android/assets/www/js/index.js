@@ -140,11 +140,8 @@ var app = {
         }
 		  
 		  
-		  
-		  
-		  
-		  
-		  
+	
+		 
 
 		
        //FR1.2
@@ -217,7 +214,7 @@ var app = {
 			  });
 	  };
 	   
-	    this.nextOrder = function () {
+	 /*   this.nextOrder = function () {
 			
 			//get salesperson and password
 			var oucu = get_name_value('salesperson'); 
@@ -228,7 +225,7 @@ var app = {
 			var date;
 			
             /* Invoke the RESTful API to get order details*/
-			$.get('http://137.108.93.222/openstack/api/orders?OUCU='+ oucu + '&password=' + pass,
+		/*	$.get('http://137.108.93.222/openstack/api/orders?OUCU='+ oucu + '&password=' + pass,
               function (data) {
                   var obj = $.parseJSON(data);
                   if (obj.status == "fail") {
@@ -273,7 +270,7 @@ var app = {
 			  } 	
 					
 			  });
-		}
+		} */
 
 
 		
@@ -304,7 +301,6 @@ var app = {
 			var lon2 = lon;
 			//alert(lat1);
 			//alert(lon2);
-			
 			
 			//get salesperson and password
 			var oucu = get_name_value('salesperson'); 
@@ -471,6 +467,7 @@ var app = {
 							//date.format("yyyy-mm-dd");
 							//alert(refinedDate);
 							//get order details if inputted client ID matches order record
+							
 							if (refinedDate == "2017-05-13") {
 								alert('i did it');
 								updateMap(orderLat, orderLon);

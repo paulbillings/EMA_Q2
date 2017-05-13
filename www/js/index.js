@@ -140,33 +140,8 @@ var app = {
         }
 		  
 		  
-		function getReverseGeocodingData(lat, lng) {
-    var latlng = new google.maps.LatLng(lat, lng);
-    // This is making the Geocode request
-    var geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ 'latLng': latlng }, function (results, status) {
-        if (status !== google.maps.GeocoderStatus.OK) {
-            alert(status);
-        }
-        // This is checking to see if the Geoeode Status is OK before proceeding
-        if (status == google.maps.GeocoderStatus.OK) {
-            console.log(results);
-            address = (results[0].formatted_address);
-			alert(address);
-        }
-    });
-}  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
+	
+		 
 
 		
        //FR1.2
@@ -239,7 +214,7 @@ var app = {
 			  });
 	  };
 	   
-	    this.nextOrder = function () {
+	 /*   this.nextOrder = function () {
 			
 			//get salesperson and password
 			var oucu = get_name_value('salesperson'); 
@@ -250,7 +225,7 @@ var app = {
 			var date;
 			
             /* Invoke the RESTful API to get order details*/
-			$.get('http://137.108.93.222/openstack/api/orders?OUCU='+ oucu + '&password=' + pass,
+		/*	$.get('http://137.108.93.222/openstack/api/orders?OUCU='+ oucu + '&password=' + pass,
               function (data) {
                   var obj = $.parseJSON(data);
                   if (obj.status == "fail") {
@@ -295,7 +270,7 @@ var app = {
 			  } 	
 					
 			  });
-		}
+		} */
 
 
 		
@@ -492,6 +467,7 @@ var app = {
 							//date.format("yyyy-mm-dd");
 							//alert(refinedDate);
 							//get order details if inputted client ID matches order record
+							
 							if (refinedDate == "2017-05-13") {
 								alert('i did it');
 								updateMap(orderLat, orderLon);
