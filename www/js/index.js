@@ -18,7 +18,7 @@ function isNumber(str) {
 function get_name_value(fieldName) {
     var value = $('#' + fieldName).val();
     
-    if (fieldName == "salesperson") {
+    if (fieldName === "salesperson") {
         if (!(isLetter(value.charAt(0)) && isNumber(value.charAt(value.length - 1)))) {
             alert("Please enter a valid Salesperson ID in the correct format");
             return "";
@@ -29,7 +29,7 @@ function get_name_value(fieldName) {
 
 function get_pass_value(fieldName) {
     var value = $('#' + fieldName).val();
-    if (value == "") {
+    if (value === "") {
 		alert("Please enter a password");
 		return "";
     }
@@ -38,7 +38,7 @@ function get_pass_value(fieldName) {
 
 function get_client_value(fieldName) {
     var value = $('#' + fieldName).val();
-    if (value == "") {
+    if (value === "") {
 		alert("Please enter a Client ID");
 		return "";
     }
@@ -47,7 +47,7 @@ function get_client_value(fieldName) {
 
 function get_quantity_value(fieldName) {
     var value = $('#' + fieldName).val();
-    if (value == "" || value == "Quantity") {
+    if (value === "" || value === "Quantity") {
 		alert("Please enter a quantity");
 		return "";
     }
@@ -56,7 +56,7 @@ function get_quantity_value(fieldName) {
 
 function get_discount_value(fieldName) {
     var value = $('#' + fieldName).val();
-    if (value == "" || value == "Discount") {
+    if (value === "" || value === "Discount") {
 		//alert("Please enter a quantity");
 		return 0;
     }
@@ -81,12 +81,12 @@ var app = {
 		 var address;
 		 var lat;
 		 var lon;
+		 var clientLat;
+		 var clientLon;
 		 
       function megaMaxSale() {
 		  
-		  
-		  
-		  function updateMap(address) {
+		  function updateMap(clientLat, clientLon) {
 				var onSuccess = function(position) {
                   var div = document.getElementById("map_canvas");
                   div.width = window.innerWidth-20;
@@ -97,44 +97,37 @@ var app = {
                   map.addEventListener(plugin.google.maps.event.MAP_READY, onMapReady, false);
                   
                   function onMapReady() {
-					if (address == undefined) {  
+					if (clientLat == undefined) {  
 						map.setVisible(false);
 						plugin.google.maps.Map.setDiv(div);
 						var currentLocation = new plugin.google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 						//Add a marker to the map, at the current location with text
-						//map.addMarker({'position': currentLocation,
-						//	'title': "You are here"},
-						//function (marker){
-                        //    marker.showInfoWindow();
-                        //});
+						map.addMarker({'position': currentLocation,
+							'title': "You are here"},
+						function (marker){
+                            marker.showInfoWindow();
+                        });
 					map.setZoom(11);
 					map.setCenter(currentLocation);
 					map.refreshLayout();
 					map.setVisible(true);
 					}
 					// Mark the address if it is defined
-					if (address != undefined) {
-                      // TODO 2(a) FR2.2
-					  var newAddress = encodeURI(address);
-					  var url = "http://nominatim.openstreetmap.org/search/" + newAddress + "?format=json&countrycode=gb&limit=1";
-					  $.get(url, function(data) {
-					    if (data.length > 0) {
-							map.setVisible(false);
-							var taxiLocation = new plugin.google.maps.LatLng(data[0].lat, data[0].lon);
-							map.addMarker({'position': taxiLocation,
-								'title': "Taxi!"
-							},
-							function(marker) {
+					if (clientLat != undefined) {
+						map.setVisible(false);
+						var clientLocation = new plugin.google.maps.LatLng(clientLat, clientLon);
+						map.addMarker({'position': clientLocation,
+								'title': "Client order"
+						},
+						function(marker) {
 								marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
 								marker.showInfoWindow();
-							});
-							map.setZoom(11);
-							map.setCenter(taxiLocation);
-							map.refreshLayout();
-							map.setVisible(true); 
-						}
-					  })
-					
+						});
+						map.setZoom(11);
+						map.setCenter(clientLocation);
+						map.refreshLayout();
+						map.setVisible(true); 
+					 
 					}
 					}
 				 
@@ -143,9 +136,32 @@ var app = {
             var onError = function(error) {
               alert('code: ' + error.code + '\n' +'message: ' + error.message + '\n');
             };
-            navigator.geolocation.getCurrentPosition(onSuccess, onError, { enableHighAccuracy: true });
+            navigator.geolocation.getCurrentPosition(onSuccess, onError);
         }
-		 
+		  
+		  
+		function getReverseGeocodingData(lat, lng) {
+    var latlng = new google.maps.LatLng(lat, lng);
+    // This is making the Geocode request
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+        if (status !== google.maps.GeocoderStatus.OK) {
+            alert(status);
+        }
+        // This is checking to see if the Geoeode Status is OK before proceeding
+        if (status == google.maps.GeocoderStatus.OK) {
+            console.log(results);
+            address = (results[0].formatted_address);
+			alert(address);
+        }
+    });
+}  
+		  
+		  
+		  
+		  
+		  
+		  
 		  
 		  
 		  
@@ -279,7 +295,7 @@ var app = {
 			  } 	
 					
 			  });
-		};
+		}
 
 
 		
@@ -311,7 +327,6 @@ var app = {
 			//alert(lat1);
 			//alert(lon2);
 			
-			
 			//get salesperson and password
 			var oucu = get_name_value('salesperson'); 
 			var pass = get_pass_value('password');
@@ -340,7 +355,7 @@ var app = {
 									alert(order_id);
                               }
                           });  
-		};
+		}
 		
 		
 		function getOrderItems(oucu, pass, order) {
@@ -369,7 +384,7 @@ var app = {
 												subtotal += itemTotal;
 											}
 											
-										)
+										);
 										var vat = 20;
 										var vatTotal = vatAmount(vat, subtotal);
 										var grandTotal = subtotal + vatTotal;
@@ -444,6 +459,8 @@ var app = {
 			//var client = "";
 			//var order = "";
 			var date1;
+			var orderLat;
+			var orderLon;
 			
             /* Invoke the RESTful API to get order details*/
 			$.get('http://137.108.93.222/openstack/api/orders?OUCU='+ oucu + '&password=' + pass,
@@ -457,6 +474,8 @@ var app = {
 							//client = value.client_id;
 							order = value.id;
 							date1 = value.date;
+							orderLat = value.latitude;
+							orderLon = value.longitude;
 							
 							var date = new Date(date1);
 							var curr_date = date.getDate();
@@ -475,9 +494,7 @@ var app = {
 							//get order details if inputted client ID matches order record
 							if (refinedDate == "2017-05-13") {
 								alert('i did it');
-								//document.getElementById('orderDetails').innerHTML = client;
-								//client = "";
-								//return false;
+								updateMap(orderLat, orderLon);
 							}
 							
 						})
