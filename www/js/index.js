@@ -228,9 +228,10 @@ var app = {
 			//get salesperson and password
 			var oucu = get_name_value('salesperson'); 
 			var pass = get_pass_value('password');
-			var clientInput = get_pass_value('client_id');
-			var client = "";
+			//var clientInput = get_pass_value('client_id');
+			//var client = "";
 			//var order = "";
+			var date;
 			
             /* Invoke the RESTful API to get order details*/
 			$.get('http://137.108.93.222/openstack/api/orders?OUCU='+ oucu + '&password=' + pass,
@@ -241,8 +242,9 @@ var app = {
                   } else {
 						$.each(obj.data, function (index, value) {
 							//display description
-							client = value.client_id;
+							//client = value.client_id;
 							order = value.id;
+							
 							//get order details if inputted client ID matches order record
 							if (client === clientInput) {
 								
@@ -287,7 +289,7 @@ var app = {
 						navigator.geolocation.getCurrentPosition(showPosition);
 				} 
 				else { 
-					alert('Geolocation is not supported by this browser.');
+					alert('Geolocation is not supported');
 					}
 			}
 			function showPosition(position) {
@@ -435,7 +437,55 @@ var app = {
 		
 		
 		this.placeOrdersOnMap = function () {
+			//get salesperson and password
+			var oucu = get_name_value('salesperson'); 
+			var pass = get_pass_value('password');
+			//var clientInput = get_pass_value('client_id');
+			//var client = "";
+			//var order = "";
+			var date1;
 			
+            /* Invoke the RESTful API to get order details*/
+			$.get('http://137.108.93.222/openstack/api/orders?OUCU='+ oucu + '&password=' + pass,
+              function (data) {
+                  var obj = $.parseJSON(data);
+                  if (obj.status == "fail") {
+                      alert(obj.data[0].reason);
+                  } else {
+						$.each(obj.data, function (index, value) {
+							//display description
+							//client = value.client_id;
+							order = value.id;
+							date1 = value.date;
+							
+							var date = new Date(date1);
+							var curr_date = date.getDate();
+							var curr_month = date.getMonth() + 1; 
+							if (curr_month < 10) {
+								curr_month = "0" + curr_month;
+							} 
+							var curr_year = date.getFullYear();
+							
+							var refinedDate = (curr_year + "-" + curr_month + "-" + curr_date);
+							
+							
+							
+							//date.format("yyyy-mm-dd");
+							//alert(refinedDate);
+							//get order details if inputted client ID matches order record
+							if (refinedDate == "2017-05-13") {
+								alert('i did it');
+								//document.getElementById('orderDetails').innerHTML = client;
+								//client = "";
+								//return false;
+							}
+							
+						})
+					
+					}
+ 	
+					
+			  });
 		}
 		
 		
