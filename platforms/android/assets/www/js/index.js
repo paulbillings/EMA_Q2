@@ -26,6 +26,7 @@ function get_name_value(fieldName) {
     }
     return value;
 }
+//End of FR1.1
 
 function get_pass_value(fieldName) {
     var value = $('#' + fieldName).val();
@@ -57,7 +58,6 @@ function get_quantity_value(fieldName) {
 function get_discount_value(fieldName) {
     var value = $('#' + fieldName).val();
     if (value === "" || value === "Discount") {
-		//alert("Please enter a quantity");
 		return 0;
     }
     return value;
@@ -82,6 +82,7 @@ var app = {
 		var lon;
 		var clientLat;
 		var clientLon;
+		var newOrder = true;
 		 
       function megaMaxSale() {
 		  
@@ -227,19 +228,18 @@ var app = {
 		
 		
 		this.newOrder = function () {
+			if (newOrder = true) {
+				
+				newOrder = false;
+				updateMap(address);
+				load_position();
+				var lat1 = lat;
+				var lon2 = lon;
+				var oucu = get_name_value('salesperson'); 
+				var pass = get_pass_value('password');
+				var clientInput = get_pass_value('client_id');
 			
-			updateMap(address);
-			load_position();
-			var lat1 = lat;
-			var lon2 = lon;
-			var oucu = get_name_value('salesperson'); 
-			var pass = get_pass_value('password');
-			var clientInput = get_pass_value('client_id');
-			
-			
-			
-			
-			var url = "http://137.108.93.222/openstack/api/orders";
+				var url = "http://137.108.93.222/openstack/api/orders";
                           $.ajax({
                               url: url,
                               type: 'POST',
@@ -258,7 +258,8 @@ var app = {
 									//alert(order_id);
                               }
                           });  
-		 this.nextWidget();
+				this.nextWidget();
+			}
 		}
 		
 		
@@ -351,11 +352,14 @@ var app = {
 		
 		this.placeOrdersOnMap = function () {
 			
+			newOrder = true;
+			document.getElementById("orderDetailsList").innerHTML = "";	
 			var oucu = get_name_value('salesperson'); 
 			var pass = get_pass_value('password');
 			var date1;
 			var orderLat;
 			var orderLon;
+			var totalOrdersToday = 0;
 			
             /* Invoke the RESTful API to get order details*/
 			$.get('http://137.108.93.222/openstack/api/orders?OUCU='+ oucu + '&password=' + pass,
@@ -378,15 +382,14 @@ var app = {
 							var convTodaysDate = convertDate(todaysDate);
 							
 							if (convOrderDate == convTodaysDate) {
+								totalOrdersToday ++;
 								alert('i did it');
 								updateMap(orderLat, orderLon);
 							}
 							
 						})
-					
-					}
- 	
-					
+						alert('Total orders today, so far = ' + totalOrdersToday);
+					}	
 			  });
 		}
 		

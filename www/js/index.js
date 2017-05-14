@@ -26,6 +26,7 @@ function get_name_value(fieldName) {
     }
     return value;
 }
+//End of FR1.1
 
 function get_pass_value(fieldName) {
     var value = $('#' + fieldName).val();
@@ -57,7 +58,6 @@ function get_quantity_value(fieldName) {
 function get_discount_value(fieldName) {
     var value = $('#' + fieldName).val();
     if (value === "" || value === "Discount") {
-		//alert("Please enter a quantity");
 		return 0;
     }
     return value;
@@ -75,13 +75,14 @@ var app = {
 		 //global variables
 		var widgetNumber = 7;
 		var widgetNumber2 = widgetNumber - 8;
-		var order_id = "";
-		var price = "";
-		var address; //still using this??
+		var order_id;
+		var price;
+		//var address; //still using this??
 		var lat;
 		var lon;
-		var clientLat;
-		var clientLon;
+		//var clientLat;
+		//var clientLon;
+		var newOrder = true;
 		 
       function megaMaxSale() {
 		  
@@ -227,19 +228,18 @@ var app = {
 		
 		
 		this.newOrder = function () {
+			if (newOrder = true) {
+				
+				newOrder = false;
+				updateMap();
+				load_position();
+				var lat1 = lat;
+				var lon2 = lon;
+				var oucu = get_name_value('salesperson'); 
+				var pass = get_pass_value('password');
+				var clientInput = get_pass_value('client_id');
 			
-			updateMap(address);
-			load_position();
-			var lat1 = lat;
-			var lon2 = lon;
-			var oucu = get_name_value('salesperson'); 
-			var pass = get_pass_value('password');
-			var clientInput = get_pass_value('client_id');
-			
-			
-			
-			
-			var url = "http://137.108.93.222/openstack/api/orders";
+				var url = "http://137.108.93.222/openstack/api/orders";
                           $.ajax({
                               url: url,
                               type: 'POST',
@@ -258,7 +258,8 @@ var app = {
 									//alert(order_id);
                               }
                           });  
-		 this.nextWidget();
+				this.nextWidget();
+			}
 		}
 		
 		
@@ -271,31 +272,49 @@ var app = {
 										alert(obj.data[0].reason);
 									} else {
 											var list = "";
-											var subtotal = 0;
+											var subtotal_pence = 0;
 											document.getElementById("orderDetailsList").innerHTML = "";	
 						
 											$.each(obj.data, function (index, value) {
 												var widgetInfo = value.widget_id;
-												var priceReceived = value.pence_price;
-												var numberOf = value.number;
-												var itemTotal = numberOf * priceReceived;
-												var result = numberOf + " x " + '(widget No ' + widgetInfo + ')' + ' x ' + priceReceived + 'p ' + '= ';
 												
-												list += "<li>" + result + '<div style="float:right;">' + itemTotal + 'p   '+ '</div>' + "</li>";
-												subtotal += itemTotal;
+												var priceReceived = value.pence_price;
+												var itemPrice = convertToPounds(priceReceived);
+												
+												var numberOf = value.number;
+												
+												var itemTotal_pence = numberOf * priceReceived;
+												var itemTotal_pounds = convertToPounds(itemTotal_pence);
+												
+												var result = numberOf + " x " + '(widget No ' + widgetInfo + ')' + ' x ' + '\u00A3' + itemPrice + ' = ';
+												
+												list += "<li>" + result + '<div style="float:right;">' + '\u00A3' + itemTotal_pounds + '</div>' + "</li>";
+												subtotal_pence += itemTotal_pence;
 											}
 											
 										);
 										var vat = 20;
-										var vatTotal = vatAmount(vat, subtotal);
-										var grandTotal = subtotal + vatTotal;
-										list += "<li>" + 'Subtotal:' +  '<div style="float:right;">' + subtotal + 'p   ' + '</div>' + "</li>";
-										list += "<li>" + 'VAT:' +  '<div style="float:right;">' + vatTotal + 'p   ' + '</div>' + "</li>";
-										list += "<li>" + '<strong>' +'Grand Total:' + '<div style="float:right;">' + grandTotal + 'p   '+ '</div>' + '</strong>' + "</li>";
+										var vatTotal_pence = vatAmount(vat, subtotal_pence);
+										var vatTotal_pounds = convertToPounds(vatTotal_pence);
+										
+										var subtotal_pounds = convertToPounds(subtotal_pence);
+										
+										var grandTotal_pence = subtotal_pence + vatTotal_pence;
+										var grandTotal_pounds = convertToPounds(grandTotal_pence);
+										
+										list += "<li>" + 'Subtotal:' +  '<div style="float:right;">' + '\u00A3' + subtotal_pounds + '</div>' + "</li>";
+										list += "<li>" + 'VAT:' +  '<div style="float:right;">' + '\u00A3' + vatTotal_pounds + '</div>' + "</li>";
+										list += "<li>" + '<strong>' +'Grand Total:' + '<div style="float:right;">' + '\u00A3' + grandTotal_pounds + '</div>' + '</strong>' + "</li>";
 										$("#orderDetailsList").append(list);
 									}
 								}); 
 		
+		}
+		
+		function convertToPounds (pence) {
+			var priceReceived = (pence / 100);
+			var price_in_pounds = priceReceived.toFixed(2);
+			return price_in_pounds;
 		}
 		
 		
@@ -304,7 +323,6 @@ var app = {
 			result = Math.round(result);
 			return result;
 		}
-		
 		
 		
 		function discountAmount (discount, price) {
@@ -351,11 +369,14 @@ var app = {
 		
 		this.placeOrdersOnMap = function () {
 			
+			newOrder = true;
+			document.getElementById("orderDetailsList").innerHTML = "";	
 			var oucu = get_name_value('salesperson'); 
 			var pass = get_pass_value('password');
 			var date1;
 			var orderLat;
 			var orderLon;
+			var totalOrdersToday = 0;
 			
             /* Invoke the RESTful API to get order details*/
 			$.get('http://137.108.93.222/openstack/api/orders?OUCU='+ oucu + '&password=' + pass,
@@ -378,15 +399,14 @@ var app = {
 							var convTodaysDate = convertDate(todaysDate);
 							
 							if (convOrderDate == convTodaysDate) {
-								alert('i did it');
+								totalOrdersToday ++;
+								//alert('i did it');
 								updateMap(orderLat, orderLon);
 							}
 							
 						})
-					
-					}
- 	
-					
+						alert('Total orders today, so far = ' + totalOrdersToday);
+					}	
 			  });
 		}
 		
