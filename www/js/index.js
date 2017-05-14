@@ -136,7 +136,7 @@ var app = {
 			$.get('http://137.108.93.222/openstack/api/widgets?OUCU='+ oucu + '&password=' + pass,
               function (data) {
                   var obj = $.parseJSON(data);
-                  if (obj.status == "error") {
+                  if (obj.status === "error") {
                       alert(obj.message);
                   } else {
 						//display widget image
@@ -151,7 +151,7 @@ var app = {
 						document.getElementById('price').value = "Price = " + price + "p";
 					}
 			  });
-	  }
+	  };
 	   
 
 //-----Functional requirement FR1.2 part 2 -------------------------------------
@@ -171,7 +171,7 @@ var app = {
 			$.get('http://137.108.93.222/openstack/api/widgets?OUCU='+ oucu + '&password=' + pass,
               function (data) {
                   var obj = $.parseJSON(data);
-                  if (obj.status == "error") {
+                  if (obj.status === "error") {
                       alert(obj.message);
                   } else {
 						//display widget image
@@ -186,7 +186,7 @@ var app = {
 						document.getElementById('price').value = "Price = " + price + "p";
 					}
 			  });
-	  }
+	  };
 	
 		
 		//get current location
@@ -203,11 +203,10 @@ var app = {
 			lon = position.coords.longitude;
 		}
 		
-		
-		
+		//creates new order for client
 		this.newOrder = function () {
 			
-			if (newOrder = true) {
+			if (newOrder === true) {
 				
 				newOrder = false;
 				updateMap();
@@ -238,7 +237,7 @@ var app = {
 				//shows widgets after salesperson, passwords and client have been entered and new order created	  
 				this.nextWidget();
 			}
-		}
+		};
 		
 		
 //------Functional requirement FR1.3 --------------------------------------
@@ -271,7 +270,7 @@ var app = {
 									getOrderItems(oucu, pass, order);
                               }
                           }); 		
-		}
+		};
 		
 		
 //------Functional requirement FR1.4 --------------------------------------
@@ -280,7 +279,7 @@ var app = {
 			$.get('http://137.108.93.222/openstack/api/order_items?OUCU='+ oucu + '&password=' + pass + '&order_id=' + order,
 				function (data) {
 					var obj = $.parseJSON(data);
-					if (obj.status == "fail") {
+					if (obj.status === "fail") {
 							alert(obj.data[0].reason);
 					} else {
 						var list = "";
@@ -340,7 +339,7 @@ var app = {
 			$.get('http://137.108.93.222/openstack/api/orders?OUCU='+ oucu + '&password=' + pass,
               function (data) {
                   var obj = $.parseJSON(data);
-                  if (obj.status == "fail") {
+                  if (obj.status === "fail") {
                       alert(obj.data[0].reason);
                   } else {
 						$.each(obj.data, function (index, value) {
@@ -359,16 +358,16 @@ var app = {
 							var convTodaysDate = convertDate(todaysDate);
 							
 							//if dates are the same then add a pin to the map
-							if (convOrderDate == convTodaysDate) {
+							if (convOrderDate === convTodaysDate) {
 									totalOrdersToday ++;
 									//sends location of order to place pin
 									updateMap(orderLat, orderLon);
 							}	
-						})
+						});
 						alert('Total orders today, so far = ' + totalOrdersToday);
 					}	
 			  });
-		}
+		};
 		
 		
 		
@@ -383,7 +382,7 @@ var app = {
                   map.addEventListener(plugin.google.maps.event.MAP_READY, onMapReady, false);
                   
                   function onMapReady() {
-					if (clientLat == undefined) { 
+					if (clientLat === undefined) { 
 						
 //----------------------Functional requirement FR2.1 ----------------------------------
 						map.setVisible(false);
@@ -402,7 +401,7 @@ var app = {
 					map.setVisible(true);
 					}
 					// Mark the address if it is defined
-					if (clientLat != undefined) {
+					if (clientLat !== undefined) {
 						map.setVisible(false);
 						var clientLocation = new plugin.google.maps.LatLng(clientLat, clientLon);
 						map.addMarker({'position': clientLocation,
@@ -427,7 +426,8 @@ var app = {
             };
             navigator.geolocation.getCurrentPosition(onSuccess, onError);
         }
-	   
+		
+		load_position(); 
       } 
       this.megaMaxSale = new megaMaxSale();
     }    
