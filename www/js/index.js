@@ -63,6 +63,40 @@ function get_discount_value(fieldName) {
     return value;
 }
 
+		function convertToPounds (pence) {
+			var priceReceived = (pence / 100);
+			var price_in_pounds = priceReceived.toFixed(2);
+			return price_in_pounds;
+		}
+		
+		
+		function vatAmount (vat, subtotal) {
+			var result = (vat / 100) * subtotal;
+			result = Math.round(result);
+			return result;
+		}
+		
+		
+		function discountAmount (discount, price) {
+			var result = (discount / 100) * price;
+			result = Math.round(result);
+			return result;
+		}
+
+		
+		function convertDate (date) {
+			var aDate = date.getDate();
+			var aMonth = date.getMonth() + 1; 
+			if (aMonth < 10) {
+				aMonth = "0" + aMonth;
+			} 
+			var aYear = date.getFullYear();
+			var convertedDate = (aYear + "-" + aMonth + "-" + aDate);
+			return convertedDate;
+		}
+
+
+
 /**
  * This is the main class
  */
@@ -311,25 +345,6 @@ var app = {
 		
 		}
 		
-		function convertToPounds (pence) {
-			var priceReceived = (pence / 100);
-			var price_in_pounds = priceReceived.toFixed(2);
-			return price_in_pounds;
-		}
-		
-		
-		function vatAmount (vat, subtotal) {
-			var result = (vat / 100) * subtotal;
-			result = Math.round(result);
-			return result;
-		}
-		
-		
-		function discountAmount (discount, price) {
-			var result = (discount / 100) * price;
-			result = Math.round(result);
-			return result;
-		}
 		
 		
 		this.addToOrder = function () {
@@ -410,18 +425,6 @@ var app = {
 			  });
 		}
 		
-		
-		
-		function convertDate (date) {
-			var aDate = date.getDate();
-			var aMonth = date.getMonth() + 1; 
-			if (aMonth < 10) {
-				aMonth = "0" + aMonth;
-			} 
-			var aYear = date.getFullYear();
-			var convertedDate = (aYear + "-" + aMonth + "-" + aDate);
-			return convertedDate;
-		}
 		
 		
 		// LOSE THIS BEFORE SUBMITTING
