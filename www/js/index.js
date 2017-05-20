@@ -326,8 +326,6 @@ var app = {
 //------Functional requirement FR2.2 ----------------------------------------
 		this.placeOrdersOnMap = function () {
 			
-			newOrder = true;
-			document.getElementById("orderDetailsList").innerHTML = "";	
 			var oucu = get_name_value('salesperson'); 
 			var pass = get_pass_value('password');
 			var orderDate;
@@ -365,6 +363,16 @@ var app = {
 							}	
 						});
 						alert('Total orders today, so far = ' + totalOrdersToday);
+						
+						// Reset ready for new order
+						newOrder = true;
+						document.getElementById("orderDetailsList").innerHTML = "";
+						document.getElementById('client_id').value = "";
+						document.getElementById('password').value = "";
+						document.getElementById('salesperson').value = "";
+						document.getElementById('quantity').value = "";
+						document.getElementById('discount').value = "";
+						//-----
 					}	
 			  });
 		};
